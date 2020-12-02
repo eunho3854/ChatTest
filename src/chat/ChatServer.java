@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
+import protocol.Chat;
+
 public class ChatServer {
 
 	private static final String TAG = "ChatServer : ";
@@ -56,11 +58,21 @@ public class ChatServer {
 			String input = null;
 			try {
 				while((input = reader.readLine()) != null) {
-					
-					for (int i = 0; i < vc.size(); i++ ) {
-						if(vc.get(i) != this) {
-							ClientInfo clientInfo = vc.get(i);
-							clientInfo.writer.println(input);
+					String[] gubun = input.split(":");
+					String protocol = gubun[0];
+					if(protocol.equals(Chat.ALL)) {
+						for (int i = 0; i < vc.size(); i++ ) {
+							if(vc.get(i) != this) {
+								ClientInfo clientInfo = vc.get(i);
+								clientInfo.writer.println(gubun[1]);
+							}
+						}
+					} else {
+						for (int i = 0; i < vc.size(); i++ ) {
+							if(vc.get(i) != this) {
+								ClientInfo clientInfo = vc.get(i);
+								clientInfo.writer.println(input);
+							}
 						}
 					}
 				}
